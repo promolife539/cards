@@ -1,0 +1,49 @@
+.navbar-brand {
+    font-size: 20px;    
+}
+.navbar-link {
+    font-size: 16px;
+    font-family: helvetica;
+}
+.btn.btn-default.btn-lg {
+    width: 80%;
+    height: 130px;
+    font-size: 21px;
+    font-weight: normal;
+    align-items: center;
+    margin-bottom: 7px;
+    margin-top: 3px;
+    margin-left: auto;
+    margin-right: auto;
+    border-color: #adadad;
+}
+.button-label {
+    padding-top: 35px;
+}
+.btn-first {
+    color: #fff;
+    background-color: #5bc0de;
+}
+.btn-first:hover {
+    color: #fff;
+    background-color: #31b0d5;
+}
+.btn-second {
+    color: #fff;
+    background-color: #fc9c14;
+}
+.btn-second:hover {
+    color: #fff;
+    background-color: #ef9009;
+}
+.btn-third {
+    color: #fff;
+    background-color: #5cb85c;
+}
+.btn-third:hover {
+    color: #fff;
+    background-color: #419641;
+}
+.table-hover > tbody > tr:hover {
+  background-color: #ededed;
+}

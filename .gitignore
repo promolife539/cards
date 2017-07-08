@@ -100,4 +100,12 @@ ENV/
 # mypy
 .mypy_cache/
 
+# DB
+*.sqlite
 *.sqlite3
+
+# MacOS
+.DS_Store
+
+# pyCharm
+.idea

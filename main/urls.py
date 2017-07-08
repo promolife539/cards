@@ -3,7 +3,8 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-    url(r'index/', views.index, name='detail'),
-    url(r'^(?P<word_id>[0-9]+)/$', views.new_word, name='detail'),
-    url(r'^(?P<word_id>[0-9]+)/results/$', views.results, name='results'),
-]
+    url(r'^$', views.index),
+    url(r'^new/', views.all_news),
+    url(r'^cards/', views.all_cards),
+    url(r'^training/', views.training),
+    ]
