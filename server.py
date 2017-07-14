@@ -27,8 +27,12 @@ def new_card():
         db.db_session.add(new_card)
         db.db_session.commit() 
 
-
-        return str(request.form.get('en_meaning'))
+        return render_template(
+            'all_cards.html', title="Все карточки", 
+            nav_link_1="/new/", nav_link_2="/training/", 
+            nav_link_1_name="Создание новой карточки", nav_link_2_name="Тренировка",
+            cards = db.db_session.query(db.Card).all()
+            )
 
     return render_template(
         'new_card.html', title="Создание новой карточки", 
