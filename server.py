@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import db
-import os
 
 my_flask_app = Flask(__name__)
 
@@ -29,7 +28,7 @@ def new_card():
         db.db_session.commit() 
 
         # После отправки формы показываем листинг всех карточек
-        return all_cards()
+        return redirect(url_for('all_cards'))
 
     return render_template(
         'new_card.html', title="Создание новой карточки", 
