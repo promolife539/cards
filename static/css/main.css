@@ -44,6 +44,10 @@
     color: #fff;
     background-color: #419641;
 }
+.btn-table {
+    padding: 3px 8px;
+    font-size: 12px;
+}
 .table-hover > tbody > tr:hover {
   background-color: #ededed;
 }
