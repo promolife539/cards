@@ -19,29 +19,29 @@
             <h1>{{ title }}</h1>
         </div>
         
-        <form class="form-horizontal">
+        <form class="form-horizontal" method="POST" action="">
           <div class="form-group">
             <label class="col-xs-2 control-label">Английское слово:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="en_meaning">
             </div>
           </div>
           <div class="form-group">
             <label class="col-xs-2 control-label">Русский перевод:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="ru_meaning">
             </div>
           </div>
           <div class="form-group">
             <label class="col-xs-2 control-label">Пример:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="example">
             </div>
           </div>
           <div class="form-group">
             <label class="col-xs-2 control-label">Дополнительная информация:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="extra_info">
             </div>
           </div>
           <div class="form-group">
@@ -51,8 +51,7 @@
             </div>
           </div>
         </form> 
-            
-    </div>    
+    </div> 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
