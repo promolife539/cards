@@ -12,11 +12,18 @@ def index():
 
 
 @my_flask_app.route('/new/', methods=['GET', 'POST'])
-def all_news():
+def new_card():
 
     if request.method == 'POST':
         # Добавление в базу новой карточки
-        new_card=db.Card('en_meaning', 'ru_meaning', 'example', 'extra_info')
+        # Получаем данные из полей формы
+        en_meaning = str(request.form.get('en_meaning'))
+        ru_meaning = str(request.form.get('ru_meaning'))
+        example = str(request.form.get('example'))
+        extra_info = str(request.form.get('extra_info'))
+
+        # Сохраняем в базу
+        new_card=db.Card(en_meaning, ru_meaning, example, extra_info)
         db.db_session.add(new_card)
         db.db_session.commit() 
 
