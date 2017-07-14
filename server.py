@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import db
+import os
 
 my_flask_app = Flask(__name__)
 
@@ -23,16 +24,12 @@ def new_card():
         extra_info = str(request.form.get('extra_info'))
 
         # Сохраняем в базу
-        new_card=db.Card(en_meaning, ru_meaning, example, extra_info)
+        new_card=db.Card(en_meaning, ru_meaning, example, extra_info, 'true')
         db.db_session.add(new_card)
         db.db_session.commit() 
 
-        return render_template(
-            'all_cards.html', title="Все карточки", 
-            nav_link_1="/new/", nav_link_2="/training/", 
-            nav_link_1_name="Создание новой карточки", nav_link_2_name="Тренировка",
-            cards = db.db_session.query(db.Card).all()
-            )
+        # После отправки формы показываем листинг всех карточек
+        return all_cards()
 
     return render_template(
         'new_card.html', title="Создание новой карточки", 
