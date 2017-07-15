@@ -4,6 +4,7 @@ import db
 my_flask_app = Flask(__name__)
 
 
+# Главная страница
 @my_flask_app.route('/')
 def index():
     return render_template(
@@ -11,6 +12,14 @@ def index():
         )
 
 
+def create_or_update_card(en_meaning, ru_meaning, example, extra_info):
+    # Сохраняем в базу
+    new_card=db.Card(en_meaning, ru_meaning, example, extra_info, 'true')
+    db.db_session.add(new_card)
+    db.db_session.commit()
+
+
+# Страница создания новой карточки
 @my_flask_app.route('/new/', methods=['GET', 'POST'])
 def new_card():
 
@@ -22,31 +31,43 @@ def new_card():
         example = str(request.form.get('example'))
         extra_info = str(request.form.get('extra_info'))
 
-        # Сохраняем в базу
-        new_card=db.Card(en_meaning, ru_meaning, example, extra_info, 'true')
-        db.db_session.add(new_card)
-        db.db_session.commit() 
+        create_or_update_card(en_meaning, ru_meaning, example, extra_info)
 
         # После отправки формы показываем листинг всех карточек
         return redirect(url_for('all_cards'))
 
     return render_template(
         'new_card.html', title="Создание новой карточки", 
-        nav_link_1="/cards/", nav_link_2="/training/", 
+        nav_link_1=url_for('all_cards'), nav_link_2="/training/", 
         nav_link_1_name="Все карточки", nav_link_2_name="Тренировка"
         )
 
 
-@my_flask_app.route('/cards/')
+# Страница редактирования карточки, должна принимать id через URL
+@my_flask_app.route('/card/<int:card_id>/edit')
+def edit_card(card_id):
+    return render_template(
+        'card.html', title="Редактирование карточки", 
+        nav_link_1="/cards/", nav_link_2="/training/", 
+        nav_link_1_name="Все карточки", nav_link_2_name="Тренировка",
+        #TODO приём параметра через URL
+        card=db.db_session.query(db.Card).get(card_id)
+        )  
+
+
+# Листинг всех карточек
+@my_flask_app.route('/cards/', methods=['GET', 'DELETE'])
 def all_cards():
+    print(db.db_session.query(db.Card))
     return render_template(
         'all_cards.html', title="Все карточки", 
         nav_link_1="/new/", nav_link_2="/training/", 
         nav_link_1_name="Создание новой карточки", nav_link_2_name="Тренировка",
-        cards = db.db_session.query(db.Card).all()
+        cards=db.db_session.query(db.Card).all()
         )
 
 
+# Страница тренировки
 @my_flask_app.route('/training/')
 def training():
     return render_template(
