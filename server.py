@@ -43,14 +43,26 @@ def new_card():
         )
 
 
-# Страница редактирования карточки, должна принимать id через URL
-@my_flask_app.route('/card/<int:card_id>/edit')
-def edit_card(card_id):
+# Страница просмотра карточки
+@my_flask_app.route('/card/<int:card_id>', methods=['GET', 'POST'])
+def view_card(card_id):
     return render_template(
-        'card.html', title="Редактирование карточки", 
+        'view_card.html', title="Просмотр карточки", 
         nav_link_1="/cards/", nav_link_2="/training/", 
         nav_link_1_name="Все карточки", nav_link_2_name="Тренировка",
-        #TODO приём параметра через URL
+        # выводим конкретную карточку по id
+        card=db.db_session.query(db.Card).get(card_id)
+        )
+
+
+# Страница редактирования карточки
+@my_flask_app.route('/card/<int:card_id>/edit', methods=['GET', 'POST'])
+def edit_card(card_id):
+    return render_template(
+        'edit_card.html', title="Редактирование карточки", 
+        nav_link_1="/cards/", nav_link_2="/training/", 
+        nav_link_1_name="Все карточки", nav_link_2_name="Тренировка",
+        # выводим конкретную карточку по id
         card=db.db_session.query(db.Card).get(card_id)
         )  
 

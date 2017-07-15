@@ -28,24 +28,24 @@
           <div class="form-group">
             <label class="col-xs-2 control-label">Русский перевод:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="ru_meaning">
+              <input type="text" class="form-control" name="ru_meaning" value="{{ card.ru_meaning }}">
             </div>
           </div>
           <div class="form-group">
             <label class="col-xs-2 control-label">Пример:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="example">
+              <input type="text" class="form-control" name="example" value="{{ card.example }}">
             </div>
           </div>
           <div class="form-group">
             <label class="col-xs-2 control-label">Дополнительная информация:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="extra_info">
+              <input type="text" class="form-control" name="extra_info" value="{{ card.extra_info }}">
             </div>
           </div>
           <div class="form-group">
             <div class="col-xs-offset-2 col-xs-10">
-              <button type="button" class="btn btn-default">Отмена</button>
+              <a class="btn btn-default" href="{{ url_for('all_cards') }}">Отмена</a>
               <button type="submit" class="btn btn-primary">Сохранить</button>
             </div>
           </div>
