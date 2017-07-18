@@ -6,14 +6,6 @@ import db
 my_flask_app = Flask(__name__)
 
 
-# Главная страница
-@my_flask_app.route('/')
-def index():
-    return render_template(
-        'index.html', title="Карточки для изучения иностранного языка"
-        )
-
-
 def create_card(en_meaning, ru_meaning, example, extra_info):
     # Сохраняем в базу
     new_card=db.Card(en_meaning, ru_meaning, example, extra_info, 'true')
@@ -26,50 +18,60 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
     card.ru_meaning = ru_meaning
     card.example = example
     card.extra_info = extra_info
-
     db.db_session.commit()    
 
 
 class CreateCardForm(Form):
-    en_meaning = StringField('Английское слово:', [validators.Length(min=1, max=500)])
-    ru_meaning = StringField('Русский перевод:')
-    example = StringField('Пример:')
-    extra_info = StringField('Дополнительная информация:')
+    en_meaning = StringField(
+        'Английское слово:', 
+        [validators.InputRequired(message='Не может быть пустым'), 
+        validators.Length(max=500, message='Не может быть длиннее 500 символов')]
+        )
+    ru_meaning = StringField(
+        'Русский перевод:', 
+        [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
+        )
+    example = StringField('Пример:', 
+        [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
+        )
+    extra_info = StringField('Дополнительная информация:', 
+        [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
+        )
+
+
+# Главная страница
+@my_flask_app.route('/')
+def index():
+    return render_template(
+        'index.html', title="Карточки для изучения иностранного языка"
+        )
 
 
 # Страница создания новой карточки
 @my_flask_app.route('/new/', methods=['GET', 'POST'])
 def new_card():
-
     form = CreateCardForm(request.form)
+
     if request.method == 'POST' and form.validate():
-        # create_card(form.en_meaning.value)
-        return 'Success'
-    return render_template('test_new_card.html', form=form)
-
-    ### TODO: restore lately
-
-    if request.method == 'POST':
-        # Добавление в базу новой карточки
         # Получаем данные из полей формы
         en_meaning = str(request.form.get('en_meaning')).strip()
         ru_meaning = str(request.form.get('ru_meaning'))
         example = str(request.form.get('example'))
         extra_info = str(request.form.get('extra_info'))
 
+        # Проверяем на наличие в базе карточки с таким же en_meaning
         if db.Card.query.filter(db.Card.en_meaning == en_meaning).first():
             return 'Такая карточка уже есть'
-
+        # Добавление в базу новой карточки    
         create_card(en_meaning, ru_meaning, example, extra_info)
-
         # После отправки формы показываем листинг всех карточек
         return redirect(url_for('all_cards'))
 
     return render_template(
-        'new_card.html', title="Создание новой карточки", 
-        nav_link_1=url_for('all_cards'), nav_link_2="/training/", 
-        nav_link_1_name="Все карточки", nav_link_2_name="Тренировка"
-        )
+        'new_card.html', form=form, title="Создание новой карточки", 
+         nav_link_1=url_for('all_cards'), nav_link_2="/training/", 
+         nav_link_1_name="Все карточки", nav_link_2_name="Тренировка"
+         )
 
 
 # Страница просмотра карточки
