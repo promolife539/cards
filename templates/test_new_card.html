@@ -1,3 +1,17 @@
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(class_="form-control", **kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,40 +32,43 @@
         <div class="page-header">
             <h1>{{ title }}</h1>
         </div>
+        
         <form class="form-horizontal" method="POST" action="">
+        <dl>
           <div class="form-group">
-            <label class="col-xs-2 control-label">Английское слово:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="en_meaning" value="{{ card.en_meaning }}">
-              <!-- TODO: добавить красную строчку под валидационное сообщение -->
+            {{ render_field(form.en_meaning) }}
+              <!-- <input type="text" class="form-control" name="en_meaning"> -->
             </div>
           </div>
           <div class="form-group">
-            <label class="col-xs-2 control-label">Русский перевод:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="ru_meaning" value="{{ card.ru_meaning }}">
+            {{ render_field(form.ru_meaning) }}
+              <!--<input type="text" class="form-control" name="ru_meaning">-->
             </div>
           </div>
           <div class="form-group">
-            <label class="col-xs-2 control-label">Пример:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="example" value="{{ card.example }}">
+            {{ render_field(form.example) }}
+              <!-- <input type="text" class="form-control" name="example"> -->
             </div>
           </div>
           <div class="form-group">
-            <label class="col-xs-2 control-label">Дополнительная информация:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="extra_info" value="{{ card.extra_info }}">
+            {{ render_field(form.extra_info) }}
+              <!-- <input type="text" class="form-control" name="extra_info">-->
             </div>
           </div>
+          </dl>
           <div class="form-group">
             <div class="col-xs-offset-2 col-xs-10">
-              <a class="btn btn-default" href="{{ url_for('all_cards') }}">Отмена</a>
+              <button type="button" class="btn btn-default">Отмена</button>
               <button type="submit" class="btn btn-primary">Сохранить</button>
             </div>
           </div>
-        </form>
-    </div>
+        </form> 
+    </div> 
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

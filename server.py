@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
+from wtforms import Form, StringField, validators
 import db
+
 
 my_flask_app = Flask(__name__)
 
@@ -12,26 +14,53 @@ def index():
         )
 
 
-def create_or_update_card(en_meaning, ru_meaning, example, extra_info):
+def create_card(en_meaning, ru_meaning, example, extra_info):
     # Сохраняем в базу
     new_card=db.Card(en_meaning, ru_meaning, example, extra_info, 'true')
     db.db_session.add(new_card)
     db.db_session.commit()
+
+def update_card(card, en_meaning, ru_meaning, example, extra_info):
+    # Обновляем запись в базе
+    card.en_meaning = en_meaning
+    card.ru_meaning = ru_meaning
+    card.example = example
+    card.extra_info = extra_info
+
+    db.db_session.commit()    
+
+
+class CreateCardForm(Form):
+    en_meaning = StringField('Английское слово:', [validators.Length(min=1, max=500)])
+    ru_meaning = StringField('Русский перевод:')
+    example = StringField('Пример:')
+    extra_info = StringField('Дополнительная информация:')
 
 
 # Страница создания новой карточки
 @my_flask_app.route('/new/', methods=['GET', 'POST'])
 def new_card():
 
+    form = CreateCardForm(request.form)
+    if request.method == 'POST' and form.validate():
+        # create_card(form.en_meaning.value)
+        return 'Success'
+    return render_template('test_new_card.html', form=form)
+
+    ### TODO: restore lately
+
     if request.method == 'POST':
         # Добавление в базу новой карточки
         # Получаем данные из полей формы
-        en_meaning = str(request.form.get('en_meaning'))
+        en_meaning = str(request.form.get('en_meaning')).strip()
         ru_meaning = str(request.form.get('ru_meaning'))
         example = str(request.form.get('example'))
         extra_info = str(request.form.get('extra_info'))
 
-        create_or_update_card(en_meaning, ru_meaning, example, extra_info)
+        if db.Card.query.filter(db.Card.en_meaning == en_meaning).first():
+            return 'Такая карточка уже есть'
+
+        create_card(en_meaning, ru_meaning, example, extra_info)
 
         # После отправки формы показываем листинг всех карточек
         return redirect(url_for('all_cards'))
@@ -58,13 +87,30 @@ def view_card(card_id):
 # Страница редактирования карточки
 @my_flask_app.route('/card/<int:card_id>/edit', methods=['GET', 'POST'])
 def edit_card(card_id):
+
+    # Получение карточки (используем дальше и для её показа и для редактирования)
+    card = db.db_session.query(db.Card).get(card_id)
+
+    if request.method == 'POST':
+        # Запись в базу новой карточки
+        # Получаем данные из полей формы
+        en_meaning = str(request.form.get('en_meaning'))
+        ru_meaning = str(request.form.get('ru_meaning'))
+        example = str(request.form.get('example'))
+        extra_info = str(request.form.get('extra_info'))
+
+        update_card(card, en_meaning, ru_meaning, example, extra_info)
+
+        # После отправки формы показываем листинг всех карточек
+        return redirect(url_for('all_cards'))
+
     return render_template(
         'edit_card.html', title="Редактирование карточки", 
         nav_link_1="/cards/", nav_link_2="/training/", 
         nav_link_1_name="Все карточки", nav_link_2_name="Тренировка",
         # выводим конкретную карточку по id
-        card=db.db_session.query(db.Card).get(card_id)
-        )  
+        card=card
+        )      
 
 
 # Листинг всех карточек
