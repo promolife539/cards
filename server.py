@@ -77,8 +77,9 @@ def new_card():
 # Страница просмотра карточки
 @my_flask_app.route('/card/<int:card_id>', methods=['GET', 'POST'])
 def view_card(card_id):
+    form = CreateCardForm(request.form)
     return render_template(
-        'view_card.html', title="Просмотр карточки", 
+        'view_card.html', form=form, title="Просмотр карточки", 
         nav_link_1="/cards/", nav_link_2="/training/", 
         nav_link_1_name="Все карточки", nav_link_2_name="Тренировка",
         # выводим конкретную карточку по id
