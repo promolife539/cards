@@ -1,6 +1,6 @@
 {% macro render_field(field) %}
   <dt>{{ field.label }}
-  <dd>{{ field(class_="form-control", **kwargs)|safe }}
+  <dd>{{ field(class_="form-control", readonly=true, **kwargs)|safe }}
   {% if field.errors %}
     <ul class=errors>
     {% for error in field.errors %}
@@ -37,26 +37,22 @@
         <dl>
           <div class="form-group">
             <div class="col-xs-10">
-            {{ render_field(form.en_meaning) }}
-              <!-- <input type="text" class="form-control" name="en_meaning"> -->
+            {{ render_field(form.en_meaning) }} {{ card.en_meaning}}
             </div>
           </div>
           <div class="form-group">
             <div class="col-xs-10">
-            {{ render_field(form.ru_meaning) }}
-              <!--<input type="text" class="form-control" name="ru_meaning">-->
+            {{ render_field(form.ru_meaning) }} {{ card.ru_meaning}}
             </div>
           </div>
           <div class="form-group">
             <div class="col-xs-10">
-            {{ render_field(form.example) }}
-              <!-- <input type="text" class="form-control" name="example"> -->
+            {{ render_field(form.example) }} {{ card.example }}
             </div>
           </div>
           <div class="form-group">
             <div class="col-xs-10">
-            {{ render_field(form.extra_info) }}
-              <!-- <input type="text" class="form-control" name="extra_info">-->
+            {{ render_field(form.extra_info) }} {{ card.extra_info }}
             </div>
           </div>
           </dl>
@@ -75,67 +71,3 @@
     <script src="/static/js/bootstrap.min.js"></script>
   </body>
 </html>
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title }}</title>
-
-
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/css/main.css" rel="stylesheet">
-
-  </head>
-  <body>
-    {% include "navigation.html" %}
-
-    <div class="container">
-        <div class="page-header">
-            <h1>{{ title }}</h1>
-        </div>
-        <form class="form-horizontal" method="POST" action="">
-          <div class="form-group">
-            <label class="col-xs-2 control-label">Английское слово:</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" name="en_meaning" value="{{ card.en_meaning }}" readonly>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-xs-2 control-label">Русский перевод:</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" name="ru_meaning" value="{{ card.ru_meaning }}" readonly>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-xs-2 control-label">Пример:</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" name="example" value="{{ card.example }}" readonly>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-xs-2 control-label">Дополнительная информация:</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" name="extra_info" value="{{ card.extra_info }}" readonly>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-xs-offset-2 col-xs-10">
-              <a class="btn btn-primary" href="{{ url_for('all_cards') }}">Назад</a>
-            </div>
-          </div>
-        </form>
-    </div>
-
-   
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    
-    <script src="/static/js/bootstrap.min.js"></script>
-  </body>
-</html> -->

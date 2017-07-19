@@ -78,6 +78,12 @@ def new_card():
 @my_flask_app.route('/card/<int:card_id>', methods=['GET', 'POST'])
 def view_card(card_id):
     form = CreateCardForm(request.form)
+    # query = CreateCardForm(form.en_meaning,
+    #                          form.ru_meaning,
+    #                          form.example,
+    #                          form.extra_info,
+    #                          )
+    # db.session.add(query)
     return render_template(
         'view_card.html', form=form, title="Просмотр карточки", 
         nav_link_1="/cards/", nav_link_2="/training/", 
