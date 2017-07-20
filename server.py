@@ -18,7 +18,13 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
     card.ru_meaning = ru_meaning
     card.example = example
     card.extra_info = extra_info
-    db.db_session.commit()    
+    db.db_session.commit()
+
+def delete_card(card, en_meaning, ru_meaning, example, extra_info, is_active):
+    # Удаляем запись из базы
+    card=db.Card.query.filter_by(db.Card.id == card_id)
+    db.db_session.delete(card)
+    db.db_session.commit()
 
 
 class CreateCardForm(Form):
@@ -78,12 +84,6 @@ def new_card():
 @my_flask_app.route('/card/<int:card_id>', methods=['GET', 'POST'])
 def view_card(card_id):
     form = CreateCardForm(request.form)
-    # query = CreateCardForm(form.en_meaning,
-    #                          form.ru_meaning,
-    #                          form.example,
-    #                          form.extra_info,
-    #                          )
-    # db.session.add(query)
     return render_template(
         'view_card.html', form=form, title="Просмотр карточки", 
         nav_link_1="/cards/", nav_link_2="/training/", 
@@ -134,13 +134,23 @@ def all_cards():
         )
 
 
+# Страница удаления карточки
+@my_flask_app.route('/card/<int:card_id>/delete/', methods=['GET', 'POST'])
+def del_card(card_id):
+    card=db.db_session.query(db.Card).get(card_id)
+    if request.method == 'POST':
+        delete_card(card, en_meaning, ru_meaning, example, extra_info, is_active) 
+    return redirect(url_for('all_cards'))   
+
+
 # Страница тренировки
 @my_flask_app.route('/training/')
 def training():
     return render_template(
         'training.html', title="Тренировка", 
         nav_link_1="/new/", nav_link_2="/cards/", 
-        nav_link_1_name="Создание новой карточки", nav_link_2_name="Все карточки"
+        nav_link_1_name="Создание новой карточки", nav_link_2_name="Все карточки",
+
         )       
 
 
