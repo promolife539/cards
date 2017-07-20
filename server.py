@@ -20,9 +20,8 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
     card.extra_info = extra_info
     db.db_session.commit()
 
-def delete_card(card, en_meaning, ru_meaning, example, extra_info, is_active):
+def delete_card(card):
     # Удаляем запись из базы
-    card=db.Card.query.filter_by(db.Card.id == card_id)
     db.db_session.delete(card)
     db.db_session.commit()
 
@@ -123,7 +122,7 @@ def edit_card(card_id):
 
 
 # Листинг всех карточек
-@my_flask_app.route('/cards/', methods=['GET', 'DELETE'])
+@my_flask_app.route('/cards/', methods=['GET'])
 def all_cards():
     print(db.db_session.query(db.Card))
     return render_template(
@@ -135,11 +134,11 @@ def all_cards():
 
 
 # Страница удаления карточки
-@my_flask_app.route('/card/<int:card_id>/delete/', methods=['GET', 'POST'])
+@my_flask_app.route('/card/<int:card_id>/delete/', methods=['GET'])
 def del_card(card_id):
     card=db.db_session.query(db.Card).get(card_id)
-    if request.method == 'POST':
-        delete_card(card, en_meaning, ru_meaning, example, extra_info, is_active) 
+    if request.method == 'GET':
+        delete_card(card) 
     return redirect(url_for('all_cards'))   
 
 
