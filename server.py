@@ -31,6 +31,7 @@ class CreateCardForm(Form):
         'Английское слово:', 
         [validators.InputRequired(message='Не может быть пустым'), 
         validators.Length(max=500, message='Не может быть длиннее 500 символов')]
+        , description="test"
         )
     ru_meaning = StringField(
         'Русский перевод:', 
