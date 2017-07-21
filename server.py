@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from wtforms import Form, StringField, validators
+from wtforms import Form, StringField, TextAreaField, validators
 import db
 
 
@@ -36,10 +36,10 @@ class CreateCardForm(Form):
         'Русский перевод:', 
         [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
         )
-    example = StringField('Пример:', 
+    example = TextAreaField('Пример:', 
         [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
         )
-    extra_info = StringField('Дополнительная информация:', 
+    extra_info = TextAreaField('Дополнительная информация:', 
         [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
         )
 
@@ -73,10 +73,14 @@ def new_card():
         return redirect(url_for('all_cards'))
 
     return render_template(
-        'new_card.html', form=form, title="Создание новой карточки", 
-         nav_link_1=url_for('all_cards'), nav_link_2="/training/", 
-         nav_link_1_name="Все карточки", nav_link_2_name="Тренировка"
-         )
+        'new_card.html', 
+        form=form, 
+        title="Создание новой карточки", 
+        nav_link_1=url_for('all_cards'), 
+        nav_link_2="/training/", 
+        nav_link_1_name="Все карточки", 
+        nav_link_2_name="Тренировка"
+        )
 
 
 # Страница просмотра карточки
@@ -85,9 +89,15 @@ def view_card(card_id):
     card = db.db_session.query(db.Card).get(card_id)
     form = CreateCardForm(request.form, card)
     return render_template(
-        'view_card.html', form=form, title="Просмотр карточки", 
-        nav_link_1="/new/", nav_link_2="/cards/", nav_link_3="/training/", 
-        nav_link_1_name="Создание новой карточки", nav_link_2_name="Все карточки", nav_link_3_name="Тренировка",
+        'view_card.html', 
+        form=form, 
+        title="Просмотр карточки", 
+        nav_link_1="/new/", 
+        nav_link_2="/cards/", 
+        nav_link_3="/training/", 
+        nav_link_1_name="Создание новой карточки", 
+        nav_link_2_name="Все карточки", 
+        nav_link_3_name="Тренировка",
         # выводим конкретную карточку по id
         card=card
         )
@@ -108,7 +118,8 @@ def edit_card(card_id):
         card_db_id = db.db_session.query(db.Card).get(card_id)
 
         # Проверяем на наличие в базе карточки с таким же en_meaning
-        ##### if (db.Card.query.filter(db.Card.en_meaning == en_meaning).first() and db.Card.query.filter(db.Card.id != card_db_id).first()):
+        ##### if (db.Card.query.filter(db.Card.en_meaning == en_meaning).first() 
+        ##### and db.Card.query.filter(db.Card.id != card_db_id).first()):
         #####    return 'Такая карточка уже есть' + card_db_id
         # Добавление в базу новой карточки    
         update_card(card, en_meaning, ru_meaning, example, extra_info)
@@ -116,41 +127,18 @@ def edit_card(card_id):
         return redirect(url_for('all_cards'))
 
     return render_template(
-        'edit_card.html', form=form, title="Редактирование карточки", 
-        nav_link_1="/new/", nav_link_2="/cards/", nav_link_3="/training/", 
-        nav_link_1_name="Создание новой карточки", nav_link_2_name="Все карточки", nav_link_3_name="Тренировка",
+        'edit_card.html', 
+        form=form, 
+        title="Редактирование карточки", 
+        nav_link_1="/new/", 
+        nav_link_2="/cards/", 
+        nav_link_3="/training/", 
+        nav_link_1_name="Создание новой карточки", 
+        nav_link_2_name="Все карточки", 
+        nav_link_3_name="Тренировка",
         # выводим конкретную карточку по id
         card=card
         ) 
-
-
-# # Страница редактирования карточки
-# @my_flask_app.route('/card/<int:card_id>/edit', methods=['GET', 'POST'])
-# def edit_card(card_id):
-
-#     # Получение карточки (используем дальше и для её показа и для редактирования)
-#     card = db.db_session.query(db.Card).get(card_id)
-
-#     if request.method == 'POST':
-#         # Запись в базу новой карточки
-#         # Получаем данные из полей формы
-#         en_meaning = str(request.form.get('en_meaning'))
-#         ru_meaning = str(request.form.get('ru_meaning'))
-#         example = str(request.form.get('example'))
-#         extra_info = str(request.form.get('extra_info'))
-
-#         update_card(card, en_meaning, ru_meaning, example, extra_info)
-
-#         # После отправки формы показываем листинг всех карточек
-#         return redirect(url_for('all_cards'))
-
-#     return render_template(
-#         'edit_card.html', title="Редактирование карточки", 
-#         nav_link_1="/cards/", nav_link_2="/training/", 
-#         nav_link_1_name="Все карточки", nav_link_2_name="Тренировка",
-#         # выводим конкретную карточку по id
-#         card=card
-#         )      
 
 
 # Листинг всех карточек
@@ -158,9 +146,12 @@ def edit_card(card_id):
 def all_cards():
     print(db.db_session.query(db.Card))
     return render_template(
-        'all_cards.html', title="Все карточки", 
-        nav_link_1="/new/", nav_link_2="/training/", 
-        nav_link_1_name="Создание новой карточки", nav_link_2_name="Тренировка",
+        'all_cards.html', 
+        title="Все карточки", 
+        nav_link_1="/new/", 
+        nav_link_2="/training/", 
+        nav_link_1_name="Создание новой карточки", 
+        nav_link_2_name="Тренировка",
         cards=db.db_session.query(db.Card).all()
         )
 
@@ -178,10 +169,12 @@ def del_card(card_id):
 @my_flask_app.route('/training/')
 def training():
     return render_template(
-        'training.html', title="Тренировка", 
-        nav_link_1="/new/", nav_link_2="/cards/", 
-        nav_link_1_name="Создание новой карточки", nav_link_2_name="Все карточки",
-
+        'training.html', 
+        title="Тренировка", 
+        nav_link_1="/new/", 
+        nav_link_2="/cards/", 
+        nav_link_1_name="Создание новой карточки", 
+        nav_link_2_name="Все карточки",
         )       
 
 
