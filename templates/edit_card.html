@@ -1,3 +1,17 @@
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(class_="form-control", type="text", value=field.description, **kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,46 +26,45 @@
 
   </head>
   <body>
-    {% include "navigation.html" %}
+    {% include "navigation_3_items.html" %}
 
     <div class="container">
         <div class="page-header">
             <h1>{{ title }}</h1>
         </div>
+        
         <form class="form-horizontal" method="POST" action="">
+        <dl>
           <div class="form-group">
-            <label class="col-xs-2 control-label">Английское слово:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="en_meaning" value="{{ card.en_meaning }}">
-              <!-- TODO: добавить красную строчку под валидационное сообщение -->
+            {{ render_field(form.en_meaning) }} {{ card.en_meaning}}
             </div>
           </div>
           <div class="form-group">
-            <label class="col-xs-2 control-label">Русский перевод:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="ru_meaning" value="{{ card.ru_meaning }}">
+            {{ render_field(form.ru_meaning) }} {{ card.ru_meaning}}
             </div>
           </div>
           <div class="form-group">
-            <label class="col-xs-2 control-label">Пример:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="example" value="{{ card.example }}">
+            {{ render_field(form.example) }} {{ card.example}}
             </div>
           </div>
           <div class="form-group">
-            <label class="col-xs-2 control-label">Дополнительная информация:</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" name="extra_info" value="{{ card.extra_info }}">
+            {{ render_field(form.extra_info) }} {{ card.extra_info}}
             </div>
           </div>
+          </dl>
           <div class="form-group">
-            <div class="col-xs-offset-2 col-xs-10">
+            <div class="col-xs-10 buttons-panel">
               <a class="btn btn-default" href="{{ url_for('all_cards') }}">Отмена</a>
               <button type="submit" class="btn btn-primary">Сохранить</button>
             </div>
           </div>
-        </form>
-    </div>
+        </form> 
+    </div> 
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
