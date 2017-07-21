@@ -31,7 +31,6 @@ class CreateCardForm(Form):
         'Английское слово:', 
         [validators.InputRequired(message='Не может быть пустым'), 
         validators.Length(max=500, message='Не может быть длиннее 500 символов')]
-        , description="wow" # TODO: передавать настоящее значение
         )
     ru_meaning = StringField(
         'Русский перевод:', 
@@ -83,20 +82,22 @@ def new_card():
 # Страница просмотра карточки
 @my_flask_app.route('/card/<int:card_id>', methods=['GET', 'POST'])
 def view_card(card_id):
-    form = CreateCardForm(request.form)
+    card = db.db_session.query(db.Card).get(card_id)
+    form = CreateCardForm(request.form, card)
     return render_template(
         'view_card.html', form=form, title="Просмотр карточки", 
         nav_link_1="/new/", nav_link_2="/cards/", nav_link_3="/training/", 
         nav_link_1_name="Создание новой карточки", nav_link_2_name="Все карточки", nav_link_3_name="Тренировка",
         # выводим конкретную карточку по id
-        card=db.db_session.query(db.Card).get(card_id)
+        card=card
         )
 
 
 # Страница редактирования карточки
 @my_flask_app.route('/card/<int:card_id>/edit', methods=['GET', 'POST'])
 def edit_card(card_id):
-    form = CreateCardForm(request.form)
+    card = db.db_session.query(db.Card).get(card_id)
+    form = CreateCardForm(request.form, card)
 
     if request.method == 'POST' and form.validate():
         # Получаем данные из полей формы
@@ -104,10 +105,11 @@ def edit_card(card_id):
         ru_meaning = str(request.form.get('ru_meaning'))
         example = str(request.form.get('example'))
         extra_info = str(request.form.get('extra_info'))
+        card_db_id = db.db_session.query(db.Card).get(card_id)
 
         # Проверяем на наличие в базе карточки с таким же en_meaning
-        if db.Card.query.filter(db.Card.en_meaning == en_meaning).first():
-            return 'Такая карточка уже есть'
+        ##### if (db.Card.query.filter(db.Card.en_meaning == en_meaning).first() and db.Card.query.filter(db.Card.id != card_db_id).first()):
+        #####    return 'Такая карточка уже есть' + card_db_id
         # Добавление в базу новой карточки    
         update_card(card, en_meaning, ru_meaning, example, extra_info)
         # После отправки формы показываем листинг всех карточек
@@ -118,7 +120,7 @@ def edit_card(card_id):
         nav_link_1="/new/", nav_link_2="/cards/", nav_link_3="/training/", 
         nav_link_1_name="Создание новой карточки", nav_link_2_name="Все карточки", nav_link_3_name="Тренировка",
         # выводим конкретную карточку по id
-        card=db.db_session.query(db.Card).get(card_id)
+        card=card
         ) 
 
 
