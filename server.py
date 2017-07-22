@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from wtforms import Form, StringField, TextAreaField, validators
 import db
+import random
 
 
 my_flask_app = Flask(__name__)
@@ -118,10 +119,13 @@ def edit_card(card_id):
         card_db_id = db.db_session.query(db.Card).get(card_id)
 
         # Проверяем на наличие в базе карточки с таким же en_meaning
-        ##### if (db.Card.query.filter(db.Card.en_meaning == en_meaning).first() 
-        ##### and db.Card.query.filter(db.Card.id != card_db_id).first()):
-        #####    return 'Такая карточка уже есть' + card_db_id
-        # Добавление в базу новой карточки    
+        # TODO
+        if db.Card.query.filter(
+                db.Card.en_meaning == en_meaning,
+                db.Card.id != card.id,
+            ).first():
+            return 'Такая карточка уже есть'
+        # Добавление в базу новой карточки   
         update_card(card, en_meaning, ru_meaning, example, extra_info)
         # После отправки формы показываем листинг всех карточек
         return redirect(url_for('all_cards'))
@@ -157,17 +161,26 @@ def all_cards():
 
 
 # Страница удаления карточки
-@my_flask_app.route('/card/<int:card_id>/delete/', methods=['GET'])
+@my_flask_app.route('/card/<int:card_id>/delete/', methods=['POST'])
 def del_card(card_id):
     card=db.db_session.query(db.Card).get(card_id)
-    if request.method == 'GET':
-        delete_card(card) 
+    delete_card(card) 
     return redirect(url_for('all_cards'))   
 
 
 # Страница тренировки
 @my_flask_app.route('/training/')
+# def random_card():
+#     card_ids = db.db_session.query(db.Card.id).all()
+#     import random
+#     rand_n = random.randint(1, 10)
+# TODO    
+#    random_card_id = 
+#    return random_card_id
+
 def training():
+#    card_id = random_card_id
+#    card = db.db_session.query(db.Card).get(card_id)
     return render_template(
         'training.html', 
         title="Тренировка", 

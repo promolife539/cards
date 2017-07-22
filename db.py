@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, update, delete
+from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, update, delete, func
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
