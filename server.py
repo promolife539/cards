@@ -27,6 +27,13 @@ def delete_card(card):
     db.db_session.commit()
 
 
+# Выбираем случайный id карточки из всех имеющихся
+def random_card():
+    card_all_ids = db.db_session.query(db.Card).count()
+    rand_card_id = random.randint(1, card_all_ids)
+    return str(rand_card_id)   
+
+
 class CreateCardForm(Form):
     en_meaning = StringField(
         'Английское слово:', 
@@ -170,16 +177,11 @@ def del_card(card_id):
 
 # Страница тренировки
 @my_flask_app.route('/training/')
-# def random_card():
-#     card_ids = db.db_session.query(db.Card.id).all()
-#     rand_n = random.randint(1, 10)
-
-#     return rand_n
-# TODO    
 
 def training():
-#    card_id = random_card()
-#    card = db.db_session.query(db.Card).get(card_id)
+    card_id = random_card()
+    card = db.db_session.query(db.Card).get(card_id)
+    print(card)
     return render_template(
         'training.html', 
         title="Тренировка", 
@@ -187,7 +189,8 @@ def training():
         nav_link_2="/cards/", 
         nav_link_1_name="Создание новой карточки", 
         nav_link_2_name="Все карточки",
-        )       
+        card=card
+        )
 
 
 if __name__ == "__main__":
