@@ -172,14 +172,13 @@ def del_card(card_id):
 @my_flask_app.route('/training/')
 # def random_card():
 #     card_ids = db.db_session.query(db.Card.id).all()
-#     import random
 #     rand_n = random.randint(1, 10)
+
+#     return rand_n
 # TODO    
-#    random_card_id = 
-#    return random_card_id
 
 def training():
-#    card_id = random_card_id
+#    card_id = random_card()
 #    card = db.db_session.query(db.Card).get(card_id)
     return render_template(
         'training.html', 
