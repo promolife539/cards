@@ -8,8 +8,8 @@ my_flask_app = Flask(__name__)
 
 
 def create_card(en_meaning, ru_meaning, example, extra_info):
-    # Сохраняем в базу
-    new_card=db.Card(en_meaning, ru_meaning, example, extra_info, 'true')
+    # Сохраняем в базу (по дефолту score = 0 и active = true)
+    new_card=db.Card(en_meaning, ru_meaning, example, extra_info, 0, 'true')
     db.db_session.add(new_card)
     db.db_session.commit()
 
@@ -20,6 +20,7 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
     card.example = example
     card.extra_info = extra_info
     db.db_session.commit()
+
 
 def delete_card(card):
     # Удаляем запись из базы
@@ -176,7 +177,7 @@ def del_card(card_id):
 
 
 # Страница тренировки
-@my_flask_app.route('/training/')
+@my_flask_app.route('/training/', methods=['GET', 'POST'])
 
 def training():
     card_id = random_card()

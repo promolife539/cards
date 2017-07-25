@@ -27,9 +27,9 @@
             </div>
           <div class="form-group">
             <div class="col-xs-10 buttons-panel">
-                <button type="submit" class="btn btn-success">Знаю</button>
-                <button type="submit" class="btn btn-warning">Не уверен</button>
-                <button type="submit" class="btn btn-danger">Не знаю</button>
+                <button type="submit" class="btn btn-success" hidden="" value="1">Знаю</button>
+                <button type="submit" class="btn btn-warning" value="0">Не уверен</button>
+                <button type="submit" class="btn btn-danger" value="-1">Не знаю</button>
                 <a target="_blank" class="btn btn-primary" href="{{ url_for('view_card', card_id=card.id) }}" role="button">Посмотреть карточку</a></p>
             </div>
           </div>
