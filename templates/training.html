@@ -30,11 +30,11 @@
                 <button type="submit" class="btn btn-success">Знаю</button>
                 <button type="submit" class="btn btn-warning">Не уверен</button>
                 <button type="submit" class="btn btn-danger">Не знаю</button>
+                <a target="_blank" class="btn btn-primary" href="{{ url_for('view_card', card_id=card.id) }}" role="button">Посмотреть карточку</a></p>
             </div>
           </div>
         </form> 
     </div> 
-
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -42,10 +42,3 @@
     <script src="/static/js/bootstrap.min.js"></script>
   </body>
 </html>
-
-
-
-<!--               <br>
-              <br>
-              <br>
-              <p><a class="btn btn-primary btn-lg" href="#" role="button">Посмотреть перевод</a></p> -->
