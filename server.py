@@ -21,6 +21,13 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
     card.extra_info = extra_info
     db.db_session.commit()
 
+def update_score(card, score):
+    training_score = request.form.get('value')
+    # training_score = request.form.getlist('value[]')
+    # card.score = card.score - int(training_score[0])
+    db.db_session.commit() 
+    return print(training_score)      
+
 
 def delete_card(card):
     # Удаляем запись из базы
@@ -182,7 +189,9 @@ def del_card(card_id):
 def training():
     card_id = random_card()
     card = db.db_session.query(db.Card).get(card_id)
-    print(card)
+    print(card) 
+    if request.method == 'POST':
+        update_score(card, card.score)  
     return render_template(
         'training.html', 
         title="Тренировка", 

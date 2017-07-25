@@ -1,3 +1,17 @@
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(class_="form-control", type="text", **kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -19,7 +33,7 @@
             <h1>{{ title }}</h1>
         </div>
         
-        <form class="form-horizontal" method="POST">
+        <form class="form-horizontal" name = "training-form" form action="" method="POST">
         <dl>
           <div class="form-group">
             <div class="jumbotron">
@@ -27,9 +41,9 @@
             </div>
           <div class="form-group">
             <div class="col-xs-10 buttons-panel">
-                <button type="submit" class="btn btn-success" hidden="" value="1">Знаю</button>
-                <button type="submit" class="btn btn-warning" value="0">Не уверен</button>
-                <button type="submit" class="btn btn-danger" value="-1">Не знаю</button>
+                <button type="submit" class="btn btn-success" hidden="card_id=card.id" value="1">Знаю</button>
+                <button type="submit" class="btn btn-warning" hidden="card_id=card.id" value="0">Не уверен</button>
+                <button type="submit" class="btn btn-danger" hidden="card_id=card.id" value="-1">Не знаю</button>
                 <a target="_blank" class="btn btn-primary" href="{{ url_for('view_card', card_id=card.id) }}" role="button">Посмотреть карточку</a></p>
             </div>
           </div>
