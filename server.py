@@ -23,8 +23,7 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
 
 def update_score(card, score):
     training_score = request.form.get('value')
-    # training_score = request.form.getlist('value[]')
-    # card.score = card.score - int(training_score[0])
+    card.score = card.score - int(training_score)
     db.db_session.commit() 
     return print(training_score)      
 
