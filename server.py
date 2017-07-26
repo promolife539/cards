@@ -25,8 +25,8 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
 def update_score(card, score):
     if request.form['score-button'] == '1':  
         training_score = 1
-    # elif request.form['score-button'] == '0':
-    #     training_score = 0       
+    elif request.form['score-button'] == '0':
+        training_score = 0       
     elif request.form['score-button'] == '-1':
         training_score = -1     
     card.score = card.score + int(training_score)
