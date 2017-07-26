@@ -7,32 +7,36 @@ import random
 my_flask_app = Flask(__name__)
 
 
+# Сохраняем карточку в базу (по дефолту score = 0 и active = true)
 def create_card(en_meaning, ru_meaning, example, extra_info):
-    # Сохраняем в базу (по дефолту score = 0 и active = true)
     new_card=db.Card(en_meaning, ru_meaning, example, extra_info, 0, 'true')
     db.db_session.add(new_card)
     db.db_session.commit()
 
+# Обновляем карточку
 def update_card(card, en_meaning, ru_meaning, example, extra_info):
-    # Обновляем запись в базе
     card.en_meaning = en_meaning
     card.ru_meaning = ru_meaning
     card.example = example
     card.extra_info = extra_info
     db.db_session.commit()
 
+# Обновляем score карточки в зависимости от нажатой на странице тренировки кнопки
 def update_score(card, score):
-    training_score = request.form.get('value')
-    card.score = card.score - int(training_score)
-    db.db_session.commit() 
-    return print(training_score)      
+    if request.form['score-button'] == '1':  
+        training_score = 1
+    # elif request.form['score-button'] == '0':
+    #     training_score = 0       
+    elif request.form['score-button'] == '-1':
+        training_score = -1     
+    card.score = card.score + int(training_score)
+    db.db_session.commit()
+    return card.score      
 
-
+# Удаляем карточку из базы
 def delete_card(card):
-    # Удаляем запись из базы
     db.db_session.delete(card)
     db.db_session.commit()
-
 
 # Выбираем случайный id карточки из всех имеющихся
 def random_card():
