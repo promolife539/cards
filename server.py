@@ -192,7 +192,6 @@ def del_card(card_id):
 def training():
     card_id = random_card()
     card = db.db_session.query(db.Card).get(card_id)
-    print(card) 
     if request.method == 'POST':
         update_score(card, card.score)  
     return render_template(
