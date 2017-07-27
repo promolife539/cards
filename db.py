@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, update, delete, func
+from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, update, delete, func, desc
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+
 
 engine = create_engine('sqlite:///cards_flask.sqlite')
 

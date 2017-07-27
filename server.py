@@ -42,7 +42,12 @@ def delete_card(card):
 def random_card():
     card_all_ids = db.db_session.query(db.Card).count()
     rand_card_id = random.randint(1, card_all_ids)
-    return str(rand_card_id)   
+    return str(rand_card_id)
+
+# Выбираем id карточки с наименьшим score
+def choose_low_score_card():
+    low_score_card_id = int((db.db_session.query(db.Card.id).order_by(db.Card.score)[0])[0])
+    return low_score_card_id
 
 
 class CreateCardForm(Form):
@@ -190,7 +195,8 @@ def del_card(card_id):
 @my_flask_app.route('/training/', methods=['GET', 'POST'])
 
 def training():
-    card_id = random_card()
+    # card_id = random_card()
+    card_id = choose_low_score_card()
     card = db.db_session.query(db.Card).get(card_id)
     if request.method == 'POST':
         update_score(card, card.score)  
