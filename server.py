@@ -49,10 +49,12 @@ def choose_low_score_card():
     low_score_card_id = (db.db_session.query(db.Card.id).order_by(db.Card.score)[0])[0]
     return int(low_score_card_id)
 
-# Выбираем id карточки среди имеющих наименьшим score
-def choose_all_low_score_cards():
-    low_score_card_id = (db.db_session.query(db.Card.id).order_by(db.Card.score)[0])[0]
-    return int(low_score_card_id)    
+# # Выбираем случайный id карточки среди имеющих наименьшим score
+# def choose_random_low_score_card():
+#     lowest_score = (db.db_session.query(db.Card.score).order_by(db.Card.score)[0])[0]
+#     first_lowest_score_card = db.db_session.query(db.Card.id).filter(db.Card.score == lowest_score).first()
+#     random_card_with_lowest_score = random_card()
+#     return int(random_card_with_lowest_score)    
 
 
 class CreateCardForm(Form):
