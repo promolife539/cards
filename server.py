@@ -23,11 +23,11 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
 
 # Обновляем score карточки в зависимости от нажатой на странице тренировки кнопки
 def update_score(card, score):
-    if request.form['score-button'] == '1':  
+    if request.form['score-button'] == 'know':  
         training_score = 1
-    elif request.form['score-button'] == '0':
+    elif request.form['score-button'] == 'not-sure':
         training_score = 0       
-    elif request.form['score-button'] == '-1':
+    elif request.form['score-button'] == 'dont-know':
         training_score = -1     
     card.score = card.score + int(training_score)
     db.db_session.commit()
@@ -46,8 +46,13 @@ def random_card():
 
 # Выбираем id карточки с наименьшим score
 def choose_low_score_card():
-    low_score_card_id = int((db.db_session.query(db.Card.id).order_by(db.Card.score)[0])[0])
-    return low_score_card_id
+    low_score_card_id = (db.db_session.query(db.Card.id).order_by(db.Card.score)[0])[0]
+    return int(low_score_card_id)
+
+# Выбираем id карточки среди имеющих наименьшим score
+def choose_all_low_score_cards():
+    low_score_card_id = (db.db_session.query(db.Card.id).order_by(db.Card.score)[0])[0]
+    return int(low_score_card_id)    
 
 
 class CreateCardForm(Form):
@@ -199,7 +204,8 @@ def training():
     card_id = choose_low_score_card()
     card = db.db_session.query(db.Card).get(card_id)
     if request.method == 'POST':
-        update_score(card, card.score)  
+        update_score(card, card.score)
+        return redirect(url_for('training'))  
     return render_template(
         'training.html', 
         title="Тренировка", 
