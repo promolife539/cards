@@ -9,9 +9,10 @@ my_flask_app = Flask(__name__)
 
 # Сохраняем карточку в базу (по дефолту score = 0 и active = true)
 def create_card(en_meaning, ru_meaning, example, extra_info):
-    new_card=db.Card(en_meaning, ru_meaning, example, extra_info, 0, 'true')
-    db.db_session.add(new_card)
+    card = db.Card(en_meaning, ru_meaning, example, extra_info, 0, 'true')
+    db.db_session.add(card)
     db.db_session.commit()
+
 
 # Обновляем карточку
 def update_card(card, en_meaning, ru_meaning, example, extra_info):
@@ -21,23 +22,27 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
     card.extra_info = extra_info
     db.db_session.commit()
 
+
 # Обновляем score карточки в зависимости от нажатой на странице тренировки кнопки
-def update_score(card, score):
+def update_score(card):
     training_score = {'know': 1, 'not-sure': 0, 'dont-know': -1}[request.form['score-button']]   
     card.score = card.score + int(training_score)
     db.db_session.commit()
     return card.score
+
 
 # Удаляем карточку из базы
 def delete_card(card):
     db.db_session.delete(card)
     db.db_session.commit()
 
+
 # Выбираем случайный id карточки из всех имеющихся
 def random_card():
     card_all_ids = db.db_session.query(db.Card).count()
     rand_card_id = random.randint(1, card_all_ids)
     return str(rand_card_id)
+
 
 # Выбираем id карточки с наименьшим score с возможность указать, какие карточки не показывать следом
 def choose_low_score_card(exclude=None):
@@ -144,14 +149,13 @@ def edit_card(card_id):
         ru_meaning = str(request.form.get('ru_meaning'))
         example = str(request.form.get('example'))
         extra_info = str(request.form.get('extra_info'))
-        card_db_id = db.db_session.query(db.Card).get(card_id)
+        ##card_db_id = db.db_session.query(db.Card).get(card_id)
 
         # Проверяем на наличие в базе карточки с таким же en_meaning
-        # TODO
         if db.Card.query.filter(
                 db.Card.en_meaning == en_meaning,
                 db.Card.id != card.id,
-            ).first():
+                                ).first():
             return 'Такая карточка уже есть'
         # Добавление в базу новой карточки   
         update_card(card, en_meaning, ru_meaning, example, extra_info)
@@ -191,7 +195,7 @@ def all_cards():
 # Страница удаления карточки
 @my_flask_app.route('/card/<int:card_id>/delete/', methods=['POST'])
 def del_card(card_id):
-    card=db.db_session.query(db.Card).get(card_id)
+    card = db.db_session.query(db.Card).get(card_id)
     delete_card(card) 
     return redirect(url_for('all_cards'))   
 
@@ -204,7 +208,7 @@ def training():
     card = choose_low_score_card(exclude=[card_exclude_id])
     card_exclude_id = card.id
     if request.method == 'POST':
-        update_score(card, card.score)
+        update_score(card)
         return redirect(url_for('training'))     
     return render_template(
         'training.html', 

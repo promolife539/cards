@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, update, delete, func, desc
-from sqlalchemy.orm import relationship, scoped_session, sessionmaker
+from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -33,7 +33,12 @@ class Card(Base):
         self.is_active = is_active
 
     def __repr__(self):
-        return '<Card {} {} {} {} {}>'.format(self.en_meaning, self.ru_meaning, self.example, self.extra_info, self.score, self.is_active)
+        return '<Card {} {} {} {} {}>'.format(self.en_meaning,
+                                              self.ru_meaning,
+                                              self.example,
+                                              self.extra_info,
+                                              self.score,
+                                              self.is_active)
 
 
 if __name__ == "__main__":
