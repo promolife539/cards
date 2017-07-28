@@ -44,7 +44,7 @@ def random_card():
     return str(rand_card_id)
 
 
-# Выбираем id карточки с наименьшим score с возможность указать, какие карточки не показывать следом
+# Выбираем карточку с наименьшим score с возможность указать, какие карточки не показывать следом
 def choose_low_score_card(exclude=None):
     query = db.db_session.query(db.Card)
     if exclude:
@@ -52,29 +52,18 @@ def choose_low_score_card(exclude=None):
     return query.order_by(db.Card.score).first()
 
 
-# # Выбираем случайный id карточки среди имеющих наименьшим score
-# def choose_random_low_score_card():
-#     lowest_score = (db.db_session.query(db.Card.score).order_by(db.Card.score)[0])[0]
-#     first_lowest_score_card = db.db_session.query(db.Card.id).filter(db.Card.score == lowest_score).first()
-#     random_card_with_lowest_score = random_card()
-#     return int(random_card_with_lowest_score)    
-
-
 class CreateCardForm(Form):
     en_meaning = StringField(
-        'Английское слово:', 
-        [validators.InputRequired(message='Не может быть пустым'), 
-        validators.Length(max=500, message='Не может быть длиннее 500 символов')]
+        'Английское слово:', [validators.InputRequired(message='Не может быть пустым'), validators.Length(max=500, message='Не может быть длиннее 500 символов')]
         )
     ru_meaning = StringField(
-        'Русский перевод:', 
-        [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
+        'Русский перевод:', [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
         )
-    example = TextAreaField('Пример:', 
-        [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
+    example = TextAreaField(
+        'Пример:', [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
         )
-    extra_info = TextAreaField('Дополнительная информация:', 
-        [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
+    extra_info = TextAreaField(
+        'Дополнительная информация:', [validators.Length(max=500, message='Не может быть длиннее 500 символов')]
         )
 
 
@@ -149,7 +138,6 @@ def edit_card(card_id):
         ru_meaning = str(request.form.get('ru_meaning'))
         example = str(request.form.get('example'))
         extra_info = str(request.form.get('extra_info'))
-        ##card_db_id = db.db_session.query(db.Card).get(card_id)
 
         # Проверяем на наличие в базе карточки с таким же en_meaning
         if db.Card.query.filter(
@@ -202,14 +190,20 @@ def del_card(card_id):
 
 # Страница тренировки
 @my_flask_app.route('/training/', methods=['GET', 'POST'])
-
 def training():
-    card_exclude_id = 0
-    card = choose_low_score_card(exclude=[card_exclude_id])
-    card_exclude_id = card.id
+    # Если пользователь пришел сюда нажав одну из кнопок
     if request.method == 'POST':
+        # то из скрытого поля нам приходит 'card-id' той карточки
+        # на которую он сейчас отвечает, и мы ее можем исключить
+        # из выдачи
+        card = choose_low_score_card(exclude=[request.form['card-id']])
+        # и в зависимости от того, какую он кнопку нажал нам приходет
+        # сответствующий 'score-button'
         update_score(card)
-        return redirect(url_for('training'))     
+    else:
+        # Иначе пользователь просто нажал на кнопку тренировки
+        # и мы ему выдаем самую сложную карту
+        card = choose_low_score_card()
     return render_template(
         'training.html', 
         title="Тренировка", 
@@ -219,7 +213,7 @@ def training():
         nav_link_2_name="Все карточки",
         card=card
         )
-
+      
 
 if __name__ == "__main__":
     my_flask_app.run(debug=True)   

@@ -14,7 +14,7 @@ cards = [
         'ru_meaning': 'Белка',
         'example': 'Tree-dwelling squirrels have lovely bushy tails, and we realised that the little ones, from the look of them, were also from one such splendid family line.',
         'extra_info': 'ˈskwɪrəl',
-        'score': '1',
+        'score': '0',
         'is_active': 1,
     },
     {
@@ -22,7 +22,7 @@ cards = [
         'ru_meaning': 'Грузовик',
         'example': 'There will be classic and vintage cars, racing cars, go-carts, bikes, trucks , service vehicles and just about anything else with wheels.',
         'extra_info': 'trʌk',
-        'score': '2',
+        'score': '0',
         'is_active': 1,
     },
     {
