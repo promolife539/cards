@@ -23,15 +23,10 @@ def update_card(card, en_meaning, ru_meaning, example, extra_info):
 
 # Обновляем score карточки в зависимости от нажатой на странице тренировки кнопки
 def update_score(card, score):
-    if request.form['score-button'] == 'know':  
-        training_score = 1
-    elif request.form['score-button'] == 'not-sure':
-        training_score = 0       
-    elif request.form['score-button'] == 'dont-know':
-        training_score = -1     
+    training_score = {'know': 1, 'not-sure': 0, 'dont-know': -1}[request.form['score-button']]   
     card.score = card.score + int(training_score)
     db.db_session.commit()
-    return card.score      
+    return card.score
 
 # Удаляем карточку из базы
 def delete_card(card):
@@ -44,10 +39,13 @@ def random_card():
     rand_card_id = random.randint(1, card_all_ids)
     return str(rand_card_id)
 
-# Выбираем id карточки с наименьшим score
-def choose_low_score_card():
-    low_score_card_id = (db.db_session.query(db.Card.id).order_by(db.Card.score)[0])[0]
-    return int(low_score_card_id)
+# Выбираем id карточки с наименьшим score с возможность указать, какие карточки не показывать следом
+def choose_low_score_card(exclude=None):
+    query = db.db_session.query(db.Card)
+    if exclude:
+        query = query.filter(db.Card.id.notin_(exclude))
+    return query.order_by(db.Card.score).first()
+
 
 # # Выбираем случайный id карточки среди имеющих наименьшим score
 # def choose_random_low_score_card():
@@ -202,12 +200,12 @@ def del_card(card_id):
 @my_flask_app.route('/training/', methods=['GET', 'POST'])
 
 def training():
-    # card_id = random_card()
-    card_id = choose_low_score_card()
-    card = db.db_session.query(db.Card).get(card_id)
+    card_exclude_id = 0
+    card = choose_low_score_card(exclude=[card_exclude_id])
+    card_exclude_id = card.id
     if request.method == 'POST':
         update_score(card, card.score)
-        return redirect(url_for('training'))  
+        return redirect(url_for('training'))     
     return render_template(
         'training.html', 
         title="Тренировка", 
