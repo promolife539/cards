@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import db
+from skyengparse import skyeng_info
 
 my_flask_app = Flask(__name__)
 
@@ -30,6 +31,11 @@ def new_card():
         ru_meaning = str(request.form.get('ru_meaning'))
         example = str(request.form.get('example'))
         extra_info = str(request.form.get('extra_info'))
+
+        word_data = skyeng_info(en_meaning)
+        if word_data:
+            ru_meaning = ru_meaning if ru_meaning else word_data['ru_meaning']
+            extra_info = extra_info if extra_info else word_data['extra_info']
 
         create_or_update_card(en_meaning, ru_meaning, example, extra_info)
 
