@@ -12,13 +12,32 @@
 
   </head>
   <body>
-    {% include "navigation.html" %}
+    {% include "navigation_2_items.html" %}
 
     <div class="container">
         <div class="page-header">
             <h1>{{ title }}</h1>
-            <!-- TODO: training  -->
-    </div>    
+        </div>
+        
+        <form class="form-horizontal" method="POST">
+        <dl>
+          <div class="form-group">
+            <div class="jumbotron">
+              <h1>{{ card.en_meaning }}</h1>
+            </div>
+              <div class="form-group">
+                <div class="col-xs-10 buttons-panel">
+                    <input type="hidden" name="card-id" value="{{card.id}}"/>
+                    <button type="submit" name="score-button" class="btn btn-success" " value="know">Знаю</button>
+                    <button type="submit" name="score-button" class="btn btn-warning" value="not-sure">Не уверен</button>
+                    <button type="submit" name="score-button" class="btn btn-danger" value="dont-know">Не знаю</button>
+                    <a target="_blank" class="btn btn-primary" href="{{ url_for('view_card', card_id=card.id) }}" role="button">Посмотреть карточку</a></p>
+                </div>
+              </div>
+          </div>
+        </dl>
+        </form>
+    </div> 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

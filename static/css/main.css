@@ -51,3 +51,27 @@
 .table-hover > tbody > tr:hover {
   background-color: #ededed;
 }
+.buttons-panel {
+    margin-top: 20px;
+}
+.jumbotron {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+@media screen and (min-width: 768px) {
+  .jumbotron {
+    padding-top: 20px;
+    padding-bottom: 45px;
+    text-align: left;
+  }
+  .container .jumbotron,
+  .container-fluid .jumbotron {
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+  .jumbotron h1,
+  .jumbotron .h1 {
+    font-size: 56px;
+  }
+}
