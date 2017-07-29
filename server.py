@@ -39,9 +39,11 @@ def delete_card(card):
 
 # Выбираем случайный id карточки из всех имеющихся
 def random_card():
+    #query = db.db_session.query(db.Card)
     card_all_ids = db.db_session.query(db.Card).count()
     rand_card_id = random.randint(1, card_all_ids)
-    return str(rand_card_id)
+    rand_card = db.db_session.query(db.Card).get(rand_card_id)
+    return rand_card
 
 
 # Выбираем карточку с наименьшим score с возможность указать, какие карточки не показывать следом
@@ -196,10 +198,13 @@ def training():
         # то из скрытого поля нам приходит 'card-id' той карточки
         # на которую он сейчас отвечает, и мы ее можем исключить
         # из выдачи
-        card = choose_low_score_card(exclude=[request.form['card-id']])
         # и в зависимости от того, какую он кнопку нажал нам приходет
         # сответствующий 'score-button'
-        update_score(card)
+        current_card = db.db_session.query(db.Card).get(int(request.form['card-id']))
+        update_score(current_card)
+
+        card = choose_low_score_card(exclude=[current_card.id])
+
     else:
         # Иначе пользователь просто нажал на кнопку тренировки
         # и мы ему выдаем самую сложную карту
